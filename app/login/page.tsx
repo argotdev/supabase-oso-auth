@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { createServerSupabaseClient } from '@/lib/supabase';
 import { redirect } from 'next/navigation';
+import LoginForm from '@/components/LoginForm';
 
-export default async function Home() {
+export default async function LoginPage() {
   // Create a Supabase client
   const supabase = createServerSupabaseClient();
   
@@ -16,16 +16,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold mb-6">Supabase + Oso Auth Example</h1>
-      <p className="text-xl mb-8">A simple example of authentication with Supabase and authorization with Oso</p>
-      <div className="flex gap-4">
-        <Link 
-          href="/login" 
-          className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition-colors"
-        >
-          Log In
-        </Link>
-      </div>
+      <LoginForm />
     </div>
   );
 }
