@@ -59,10 +59,7 @@ export const checkAccess = async (userId: string, resourceId: string) => {
   if (resourceId === "protected-section") {
     return await checkUserRole(userId, "admin");
   }
-
-  // For other resources, use standard authorization
-  const oso = getOsoClient();
-  const user = { type: "User", id: userId };
-  const resource = { type: "Resource", id: resourceId };
-  return await oso.authorize(user, "access", resource);
+  
+  // For now, we only handle protected section access
+  return false;
 };
