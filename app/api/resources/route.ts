@@ -1,5 +1,5 @@
 import { createServerSupabaseClient } from '@/lib/supabase';
-import { getOsoClient } from '@/lib/oso';
+import { checkAccess } from '@/lib/oso';
 import { NextRequest, NextResponse } from 'next/server';
 import { Resource } from '@/types';
 
@@ -24,25 +24,11 @@ export async function GET(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    const oso = getOsoClient();
 
     // Filter resources based on authorization
     const authorizedResources = await Promise.all(
       resources.map(async (resource) => {
-        // Convert to the format expected by Oso policy - change type to 'Document'
-        const osoResource = { 
-          type: 'Document', 
-          id: resource.id,
-          is_public: resource.isPublic,
-          owner_id: resource.ownerId
-        };
-        
-        const canRead = await oso.authorize(
-          { type: 'User', id: userId },
-          'read',
-          osoResource
-        );
-
+        const canRead = await checkAccess(userId, resource.id);
         if (canRead) return resource;
         return null;
       })

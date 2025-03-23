@@ -1,6 +1,6 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { getOsoClient } from '@/lib/oso';
+import { checkUserRole } from '@/lib/oso';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import LogoutButton from '@/components/LogoutButton';
@@ -17,14 +17,7 @@ export default async function ProtectedPage() {
   }
 
   // Check authorization with Oso
-  const oso = getOsoClient();
-  const facts = await oso.get([
-    "has_role",
-    { type: "User", id: session.user.id },
-    "admin",
-    { type: "Application", id: "app" }
-  ]);
-  const isAuthorized = facts.length > 0;
+  const isAuthorized = await checkUserRole(session.user.id, "admin");
 
   if (!isAuthorized) {
     // User is logged in but not authorized to view this page

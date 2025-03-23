@@ -1,7 +1,7 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { getOsoClient } from '@/lib/oso';
+import { checkUserRole, removeUserRole, addUserRole } from '@/lib/oso';
 
 export async function POST(request: Request) {
   try {
@@ -28,13 +28,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get Oso client
-    const oso = getOsoClient();
-
     // Check if user is already an admin
-    const user = { type: "User", id: userId };
-    const app = { type: "Application", id: "app" };
-    const isAdmin = await oso.authorize(user, "admin", app);
+    const isAdmin = await checkUserRole(userId, "admin");
 
     if (isAdmin) {
       return NextResponse.json(
@@ -45,12 +40,7 @@ export async function POST(request: Request) {
 
     // Remove the old role first
     try {
-      await oso.delete([
-        "has_role",
-        { type: "User", id: userId },
-        "user",
-        { type: "Application", id: "app" }
-      ]);
+      await removeUserRole(userId, "user");
       console.log('Removed user role');
     } catch (error) {
       console.error('Error removing user role:', error);
@@ -58,23 +48,13 @@ export async function POST(request: Request) {
 
     // Add the new admin role
     try {
-      await oso.insert([
-        "has_role",
-        { type: "User", id: userId },
-        "admin",
-        { type: "Application", id: "app" }
-      ]);
+      await addUserRole(userId, "admin");
       console.log('Added admin role');
     } catch (error) {
       console.error('Error adding admin role:', error);
       // Try to restore the user role if admin role fails
       try {
-        await oso.insert([
-          "has_role",
-          { type: "User", id: userId },
-          "user",
-          { type: "Application", id: "app" }
-        ]);
+        await addUserRole(userId, "user");
       } catch (restoreError) {
         console.error('Error restoring user role:', restoreError);
       }
