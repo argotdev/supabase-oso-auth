@@ -52,13 +52,7 @@ export const checkUserRole = async (userId: string, role: string) => {
 };
 
 export const checkAccess = async (userId: string, resourceId: string) => {
-  // For protected resources, we check if the user has admin role
-  //if (resourceId === "protected-section") {
-  //  return await checkUserRole(userId, "admin");
-  //}
-  
-  // For now, we only handle protected section access
-  //return false;
+  // For protected resources, we use Oso to check if the user has admin role
   const oso = getOsoClient();
   const user = { type: "User", id: userId };
   const resource = { type: "Section", id: resourceId };

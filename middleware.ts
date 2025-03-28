@@ -11,8 +11,8 @@ export async function middleware(req: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession();
 
   // If trying to access a protected route without being logged in
-  const isProtectedRoute = req.nextUrl.pathname.startsWith('/protected') // || 
-                         // req.nextUrl.pathname.startsWith('/dashboard');
+  const isProtectedRoute = req.nextUrl.pathname.startsWith('/protected') || 
+                         req.nextUrl.pathname.startsWith('/dashboard');
                          
   if (isProtectedRoute && !session) {
     const redirectUrl = req.nextUrl.clone();
