@@ -1,8 +1,41 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Prerequisites
+
+### [Supabase](https://supabase.com/)
+
+1. Create a project
+2. Note the Supabase URL and anon key from the Data API settings
+3. Add a User to the Project `Project Settings -> Configuration -> Authentication -> General User Signup -> Manage -> Users`
+
+### [Oso](https://osohq.com)
+
+1. Create a [free account](https://ui.osohq.com)
+1. Create a [Read-Write API Key](https://ui.osohq.com/settings/)
+1. Save the API Key somewhere where you can refer to it later
+
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
+
+```bash
+npm install
+```
+
+Copy `.env.example` to `.env.local` and replace the placeholder text with the correct Supabase and Oso configuration for your environment.
+
+```bash
+# Supabase configuration
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Oso Cloud configuration
+OSO_CLOUD_URL=https://cloud.osohq.com
+OSO_API_KEY=your-oso-api-key
+
+```
+
+Run the development server:
 
 ```bash
 npm run dev
