@@ -1,6 +1,6 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { checkUserRole, checkAccess } from '@/lib/oso';
+import { checkAccess } from '@/lib/oso';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import LogoutButton from '@/components/LogoutButton';
