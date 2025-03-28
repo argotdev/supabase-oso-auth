@@ -28,8 +28,7 @@ export const addUserRole = async (userId: string, role: string) => {
   await oso.insert([
     "has_role",
     { type: "User", id: userId },
-    role,
-    { type: "Application", id: "app" }
+    role
   ]);
 };
 
@@ -38,8 +37,7 @@ export const removeUserRole = async (userId: string, role: string) => {
   await oso.delete([
     "has_role",
     { type: "User", id: userId },
-    role,
-    { type: "Application", id: "app" }
+    role
   ]);
 };
 
@@ -48,18 +46,21 @@ export const checkUserRole = async (userId: string, role: string) => {
   const facts = await oso.get([
     "has_role",
     { type: "User", id: userId },
-    role,
-    { type: "Application", id: "app" }
+    role
   ]);
   return facts.length > 0;
 };
 
 export const checkAccess = async (userId: string, resourceId: string) => {
   // For protected resources, we check if the user has admin role
-  if (resourceId === "protected-section") {
-    return await checkUserRole(userId, "admin");
-  }
+  //if (resourceId === "protected-section") {
+  //  return await checkUserRole(userId, "admin");
+  //}
   
   // For now, we only handle protected section access
-  return false;
+  //return false;
+  const oso = getOsoClient();
+  const user = { type: "User", id: userId };
+  const resource = { type: "Section", id: resourceId };
+  return await oso.authorize(user, "access", resource);
 };
