@@ -56,5 +56,5 @@ export const checkAccess = async (userId: string, resourceId: string) => {
   const oso = getOsoClient();
   const user = { type: "User", id: userId };
   const resource = { type: "Section", id: resourceId };
-  return await oso.authorize(user, "access", resource);
+  return await oso.authorize(user, "access_protected", resource);
 };
